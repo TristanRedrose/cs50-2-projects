@@ -1,0 +1,285 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    font-size: 2px;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.link-container {
+    width: 100%;
+    text-align: right;
+    padding: 10px;
+}
+
+a {
+    color: rgba(0,0,0,0.87);
+    text-decoration: none;
+    padding: 0 10px;
+    font-size: 14px;
+}
+
+a:hover{
+    text-decoration: underline;
+}
+
+.search-container {
+    margin-top: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#search-bar {
+    width: 584px;
+    height: 44px;
+    padding-left: 55px;
+    padding-right: 15px;
+    border-radius: 24px;
+    border: 1px lightgrey solid;
+    margin-bottom: 20px;
+    background-image: url("../pictures/icon3.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    font-size: 16px;
+}
+
+#search-bar:hover {
+    box-shadow: 0 0 5px lightgray;
+}
+
+#search-bar:focus {
+    outline: none;
+    box-shadow: 0 0 5px lightgray;
+}
+
+img {
+    height:92px;
+    margin-bottom: 25px;
+}
+
+#button-box {
+    display: flex;
+    justify-content: center;
+}
+
+.search-button {
+    border-radius: 4px;
+    border: 1px solid #f8f9fa;
+    color: #3c4043;
+    font-family: arial, sans-serif;
+    padding: 0px 16px;
+    margin: 11px 4px;
+    background-color: #f8f9fa;
+    border: 1px white solid;
+    font-size: 14px;
+    line-height: 27px;
+    height: 36px;
+    min-width: 54px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.search-button:hover {
+    border: 1px lightgrey solid;
+}
+
+.search-button:active {
+    border: 1px blue solid;
+}
+
+.icon-box {
+    width: 100%;
+    height: 100px;
+    border-bottom: 1px lightgrey solid;
+}
+
+#ad-img {
+    height:24px;
+    padding-left: 12px;
+    margin-top: -15px;
+}
+
+.label {
+    margin-left: 35px;
+    margin-top: 20px;
+}
+
+.top-text {
+    font-size: 20px;
+    color: #d93025;
+}
+
+.adbox {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.lab-box {
+    height: 30px;
+    width: 1085px;
+    display: flex;
+    flex-direction: row;
+    margin-top: 30px;
+    margin-left: 35px;
+}
+
+.span1 {
+    font-size: 16px;
+    color: #333;
+    font-weight: 500;
+}
+
+.start-div {
+    width: 173px;
+    height: 42px;
+}
+
+.mid-div {
+    width: 542px;
+    height: 41px;
+}
+
+.span2 {
+    font-size: 13px;
+    color: #777;
+    font-weight: 700;
+}
+
+.end-div {
+    width: 358px;
+    padding-left: 5px;
+    height: 30px;
+}
+
+.adsearch-container {
+    width: 1085px;
+    height: 280px;
+    margin-left: 35px;
+    border-bottom: 1px lightgrey solid;
+    display: flex;
+    flex-direction: row;
+}
+
+.left-box {
+    height: 252px;
+    width: 171px;
+    display: flex;
+    flex-direction: column;
+}
+
+.middle-box {
+    height: 252px;
+    width: 535px;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-box {
+    height: 252px;
+    width: 347px;
+    display: flex;
+    flex-direction: column;
+}
+
+.lefty-text {
+    height: 42px;
+    width: 171px;
+    color: #222;
+    font-size: 13px;
+    padding-top: 5px;
+}
+
+.righty-text {
+    height: 22px;
+    width: 347.250px;
+    padding-left: 5px;
+    margin-left: 10.850px;
+    margin-bottom: 8px;
+    padding-top: 10px;
+}
+
+.s2 {
+    font-size: 11px;
+    color: #333;
+    width: 355px;
+    height: 30px;
+}
+
+.s3 {
+    font-size: 11px;
+    color: #333;
+    width: 268px;
+    height: 30px;
+}
+
+.middy-box {
+    width: 535px;
+    height: 41px;
+    display: flex;
+    flex-direction: row;
+}
+
+.input-box {
+    width: 519px;
+    height: 29px;
+    padding-right: 16px;
+}
+
+.ad-input {
+    border-radius: 2px;
+    border: 1px solid #d9d9d9;
+    border-top: 1px solid #c0c0c0;
+    font-size: 13px;
+    height: 25px;
+    padding: 1px 8px;
+    width: 100%;
+}
+
+.ad-input:focus {
+    outline: 1px blue solid;
+}
+
+.input1-box {
+    width: 225.5px;
+    height: 29px;
+    padding-right: 16px;
+}
+
+.input2-box {
+    width: 52px;
+    height: 29px;
+    text-align: center;
+    margin-top: 6px;
+    font-size: 13px;
+    color: #202124;
+}
+
+.adbutton-box {
+    margin-top: 15px;
+    width: 535px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.adsearch-button {
+    line-height: 28px;
+    width: 120px;
+    padding: 0 12px;
+    border-radius: 2px;
+    font-size: 11px;
+    font-weight: bold;
+    box-shadow: none;
+    background-color: #4d90fe;
+    border: 1px solid #3079ed;
+    color: #fff;
+}
+

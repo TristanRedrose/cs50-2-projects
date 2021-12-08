@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    background-color: white;
+}
+
+code {
+    white-space: pre;
+}
+
+h1 {
+    margin-top: 0px;
+    padding-top: 20px;
+}
+
+textarea {
+    height: 70vh;
+    width: 80%;
+    border:2px cyan solid;
+    border-radius: 8px;
+}
+
+.title{
+    height: 5vh;
+    width: 200px;
+}
+
+.main {
+    padding: 10px;
+}
+
+.search {
+    width: 100%;
+    font-size: 15px;
+    line-height: 15px;
+}
+
+.sidebar {
+    background-color: #f0f0f0;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    margin-top: 5px;
+}
+
+.create-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.alert {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    padding: 20px;
+    width: 50%;
+    background-color: #f44336; 
+    color: white;
+    gap: 75%;
+}
+
+.edit-btn {
+    font: bold 11px;
+    border: 1px black;
+    background-color: lightgrey;
+    color: black;
+    text-decoration: none;
+    padding: 5px  10px;
+    border-radius: 8px;
+    border: 1px black solid;
+}
+
+.edit-btn:hover {
+    color: blue;
+    border: 1px cyan solid;
+    text-decoration: none;
+}
+
+.edit-btn:active {
+    color: lightgreen;
+    text-decoration: none;
+}
+
+.divider {
+    margin-top: 20px;
+}

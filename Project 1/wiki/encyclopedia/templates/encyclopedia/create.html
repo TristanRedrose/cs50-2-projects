@@ -1,0 +1,35 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    New-page
+{% endblock %}
+
+{% block body %}
+    <div class="create-box">
+    {% if warning %}
+    <div class="alert">
+        Title already exists
+        <span onclick="this.parentElement.style.display='none';">X</span>
+    </div>
+    {% endif %}
+    <form action="{% url 'create' %}" method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+        <div>
+            {{ field.errors }}
+            <div>
+                {{ field.label_tag }}
+            </div>
+            {{ field }}
+            {% if field.help_text %}
+            <p>{{ field.help_text|safe }}</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <div>
+            <input type="submit" class="edit-btn" value="Create new page">
+        </div>   
+    </form>
+    </div>
+
+{% endblock %}

@@ -10,5 +10,6 @@ urlpatterns = [
     path("newlist", views.newlist, name="newlist"),
     path("listing/<str:listid>", views.list_view, name="listview"),
     path("ctg", views.category_view, name="ctg"),
-    path("ctg/<str:catid>", views.category_listview, name="ctgview")
+    path("ctg/<str:catid>", views.category_listview, name="ctgview"),
+    path("listing/<str:listid>/close", views.close_list, name="choice")
 ]

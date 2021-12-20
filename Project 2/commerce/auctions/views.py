@@ -106,6 +106,19 @@ def category_listview(request, catid):
          "listings": Listings.objects.all()
     })
 
+def close_list(request, listid):
+    if request.method == "POST":
+        c_list = Listings.objects.get(pk=int(listid))
+        value = request.POST["closer"]
+        c_list.active = value
+        c_list.save()
+        return HttpResponseRedirect(reverse("index"))
+    else:
+        return render(request, "auctions/close.html", {
+            "listing": Listings.objects.get(pk=int(listid))
+        })
+
+
 
         
 

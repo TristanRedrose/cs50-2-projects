@@ -1,0 +1,26 @@
+{% extends "auctions/layout.html" %}
+{% load humanize %}
+
+{% block body %}
+    <div class="dec-box">
+        <h2>Close {{ listing.title }} at ${{ listing.bid|intcomma }}?</h2>
+        <div class="close-box">
+            <div class="imagelist-box">
+                {% if listing.picture ==  "" %}
+                    <image class="l-img" src="https://tacm.com/wp-content/uploads/2018/01/no-image-available.jpeg" alt="no image">
+                {% else %}
+                    <image class="l-img" src="{{ listing.picture }}" alt="listing image">
+                {% endif %}
+            </div>
+        </div>
+        <div class="choice-pair">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="closer" value="False">
+                <input class="btn btn-primary" type="submit" value="   Yes   ">
+            </form>
+            <a class="btn btn-primary" href="/listing/{{ listing.id }}">No</a>
+        </div>
+    </div>
+    
+{% endblock %}

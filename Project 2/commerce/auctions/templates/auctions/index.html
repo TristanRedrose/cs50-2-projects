@@ -1,0 +1,43 @@
+{% extends "auctions/layout.html" %}
+{% load humanize %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% for listing in listings%}
+        {% if listing.active == True %}
+        <div class="auction-box">
+            <div class="image-box">
+                {% if listing.picture ==  "" %}
+                <a href="/listing/{{ listing.id }}">
+                    <image class="l-img" src="https://tacm.com/wp-content/uploads/2018/01/no-image-available.jpeg" alt="no image">
+                </a>
+                {% else %}
+                <a href="/listing/{{ listing.id }}">
+                    <image class="l-img" src="{{ listing.picture }}" alt="listing image">
+                </a>
+                {% endif %}
+            </div>
+            <div class="text-box">
+                <div class="m-box">
+                    <a class="list-link" href="/listing/{{ listing.id }}">
+                        <h5><strong>{{ listing.title }}</strong></h5>
+                    </a>
+                </div>
+                <div class="m-box">
+                    <h6> <strong>Category:</strong> {{ listing.ctg }}</h6>
+                </div>
+                <div class="m-box">
+                    <h6><strong>Price:</strong> ${{ listing.bid|intcomma }}</h6>
+                </div>
+                <div class="m-box">
+                    <h6>{{ listing.description }}</h6>
+                </div>
+                <div class="m-box">
+                    <p class="c-tex">Listed by: {{ listing.creator }}</p>
+                    <p class="c-tex">Created: {{ listing.time }}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

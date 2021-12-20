@@ -1,0 +1,44 @@
+{% extends "auctions/layout.html" %}
+{% load humanize %}
+
+{% block body %}
+    <h2>Listing: {{ listing.title }}</h2>
+    <div class="list-box">
+        <div class="auction-box">
+            <div class="imagelist-box">
+                {% if listing.picture ==  "" %}
+                    <image class="l-img" src="https://tacm.com/wp-content/uploads/2018/01/no-image-available.jpeg" alt="no image">
+                {% else %}
+                    <image class="l-img" src="{{ listing.picture }}" alt="listing image">
+                {% endif %}
+            </div>
+        </div>
+        <div class="m-box">
+            <h6>{{ listing.description }}</h6>
+        </div>
+        <div class="m-box">
+            <h3>Current price: ${{ listing.bid|intcomma }}</h3>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="m-box">
+            <form action="{% url 'newlist' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input class="form-control" type="number" min="1" name="bid" placeholder="Bid">
+                </div>
+                <input class="btn btn-primary" type="submit" value="Place bid">
+        </div>    
+        {% endif %}
+        <div class="m-box">
+
+        </div>
+        <div class="m-box">
+            <h4>Details:</h4>
+            <ul>
+                <li>Listed by: {{ listing.creator}}</li>
+                <li>Category: {{ listing.ctg }}</li>
+                <li>Created: {{ listing.time}}</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

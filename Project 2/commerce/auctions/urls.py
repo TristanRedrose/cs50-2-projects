@@ -1,0 +1,14 @@
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path("", views.index, name="index"),
+    path("login", views.login_view, name="login"),
+    path("logout", views.logout_view, name="logout"),
+    path("register", views.register, name="register"),
+    path("newlist", views.newlist, name="newlist"),
+    path("listing/<str:listid>", views.list_view, name="listview"),
+    path("ctg", views.category_view, name="ctg"),
+    path("ctg/<str:catid>", views.category_listview, name="ctgview")
+]

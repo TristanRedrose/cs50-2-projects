@@ -1,0 +1,67 @@
+body {
+    padding: 10px;
+}
+
+.auction-box {
+    height: 250px;
+    width: 100%;
+    border: 1px grey solid;
+    display:flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.image-box {
+    height: 100%;
+    width: 40%;
+    margin-right: 20px;
+    overflow: hidden;
+}
+
+.l-img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.text-box {
+    height: 100%;
+    width: 40%;
+    padding: 15px 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+}
+
+.m-box {
+    margin-bottom: 7px;
+}
+
+.c-tex {
+    color: grey;
+    font-size: 12px;
+    line-height: 0.8em;
+}
+
+.list-link {
+    text-decoration: none;
+    color: black;
+}
+
+.list-link:hover {
+    text-decoration: none;
+    color: black;
+}
+
+.list-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.imagelist-box {
+    height: 100%;
+    width: 70%;
+    overflow: hidden;
+}
+
+

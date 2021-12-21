@@ -87,3 +87,19 @@ body {
     padding: 5px 25px;
 }
 
+.comment-box {
+    height: 250px;
+    width: 100%;
+    padding: 5px 10px;
+    border: 1px lightgrey solid;
+    display:flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    overflow-y: auto;
+    overflow-wrap: normal;
+}
+
+.c-box {
+    margin-bottom: -10px;
+}
+

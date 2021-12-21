@@ -32,4 +32,12 @@ class Listings(models.Model):
         verbose_name_plural= "Listings"
 
     def __str__(self):
-        return f"{self.id}:{self.title} creator:{self.creator} category:{self.ctg} bid:{self.bid} created {self.time} active:{self.active}"
+        return f"{self.title} // creator: {self.creator} // category: {self.ctg} // bid: ${self.bid} // created: {self.time} // active: {self.active}"
+
+class Comment(models.Model):
+    writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="writer", editable=False)
+    subject = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="writer", editable=False)
+    comment = models.CharField(max_length=500, editable=False)
+
+    def __str__(self):
+        return f"Writer: {self.writer} // Subject: {self.subject.title} // Comment: {self.comment}"

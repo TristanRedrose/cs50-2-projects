@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Categories, Listings
+from .models import User, Categories, Listings, Comment
 
 
 def index(request):
@@ -91,9 +91,26 @@ def newlist(request):
         })
     
 def list_view(request, listid):
-    return render(request, "auctions/listing.html", {
-         "listing": Listings.objects.get(pk=int(listid))
-    })
+    if request.method == "POST":
+        writer = User.objects.get(pk=request.POST["name"])
+        subject = Listings.objects.get(pk=listid)
+        comment = request.POST["comment"]
+        if comment == "":
+            return render(request, "auctions/listing.html", {
+            "listing": Listings.objects.get(pk=int(listid)),
+            "comments": Comment.objects.all()
+            })
+        new = Comment(writer=writer, subject=subject, comment=comment)
+        new.save()
+        return render(request, "auctions/listing.html", {
+            "listing": Listings.objects.get(pk=int(listid)),
+            "comments": Comment.objects.all()
+        })
+    else:
+        return render(request, "auctions/listing.html", {
+            "listing": Listings.objects.get(pk=int(listid)),
+            "comments": Comment.objects.all()
+        })
 
 def category_view(request):
     return render(request, "auctions/category.html", {

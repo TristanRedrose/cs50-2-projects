@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Categories, Listings, Comment
+from .models import User, Categories, Listings, Comment, Watchlist
 
 
 def index(request):
@@ -91,6 +91,16 @@ def newlist(request):
         })
     
 def list_view(request, listid):
+    check = False
+    if request.user.is_authenticated:
+        name= User.objects.get(username=request.user.username)
+        watchlists = Watchlist.objects.all()
+        listing = Listings.objects.get(pk=int(listid))
+        for watchlist in watchlists:
+            if watchlist.user == name:
+                for watch in watchlist.lists.all():
+                    if watch.title == listing.title:
+                        check = True
     if request.method == "POST":
         writer = User.objects.get(pk=request.POST["name"])
         subject = Listings.objects.get(pk=listid)
@@ -98,18 +108,21 @@ def list_view(request, listid):
         if comment == "":
             return render(request, "auctions/listing.html", {
             "listing": Listings.objects.get(pk=int(listid)),
-            "comments": Comment.objects.all()
+            "comments": Comment.objects.all(),
+            "check": check
             })
         new = Comment(writer=writer, subject=subject, comment=comment)
         new.save()
         return render(request, "auctions/listing.html", {
             "listing": Listings.objects.get(pk=int(listid)),
-            "comments": Comment.objects.all()
+            "comments": Comment.objects.all(),
+            "check": check
         })
     else:
         return render(request, "auctions/listing.html", {
             "listing": Listings.objects.get(pk=int(listid)),
-            "comments": Comment.objects.all()
+            "comments": Comment.objects.all(),
+            "check": check
         })
 
 def category_view(request):
@@ -134,6 +147,35 @@ def close_list(request, listid):
         return render(request, "auctions/close.html", {
             "listing": Listings.objects.get(pk=int(listid))
         })
+
+def watch(request):
+    check = True
+    name = User.objects.get(username=request.user.username)
+    try: 
+        Watchlist.objects.get(user=name)
+    except Watchlist.DoesNotExist:
+        check = False
+    if request.method == "POST":
+        watcher = User.objects.get(pk=request.POST["name"])
+        try:
+            new = Watchlist.objects.get(user=watcher)
+        except Watchlist.DoesNotExist:
+            new = Watchlist(user=watcher)
+            new.save()
+        subject = Listings.objects.get(pk=request.POST["list-name"])
+        new.lists.add(subject)
+        return render(request, "auctions/watchlist.html", {
+            "watchlists": Watchlist.objects.all(),  
+            "check": True
+        })
+    else:
+        return render(request, "auctions/watchlist.html", {
+            "watchlists": Watchlist.objects.all(),
+            "check": check
+        })
+    
+
+
 
 
 

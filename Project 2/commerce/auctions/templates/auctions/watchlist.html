@@ -1,0 +1,52 @@
+{% extends "auctions/layout.html" %}
+{% load humanize %}
+
+{% block body %}
+<h2>Your watchlist</h2>
+    {% if check == False %}
+    <p>Your watchlist is empty</p>
+    {% else %}
+        {% for watchlist in watchlists %}
+            {% if watchlist.user|upper == user.username|upper %}
+                {% for watch in watchlist.lists.all %}
+                <div class="auction-box">
+                    <div class="image-box">
+                        {% if watch.picture ==  "" %}
+                        <a href="/listing/{{ watch.id }}">
+                            <image class="l-img" src="https://tacm.com/wp-content/uploads/2018/01/no-image-available.jpeg" alt="no image">
+                        </a>
+                        {% else %}
+                        <a href="/listing/{{ watch.id }}">
+                            <image class="l-img" src="{{ watch.picture }}" alt="listing image">
+                        </a>
+                        {% endif %}
+                    </div>
+                    <div class="text-box">
+                        <div class="m-box">
+                            <a class="list-link" href="/listing/{{ listing.id }}">
+                                <h5><strong>{{ watch.title }}</strong></h5>
+                            </a>
+                        </div>
+                        <div class="m-box">
+                            <h6> <strong>Category:</strong> {{ watch.ctg }}</h6>
+                        </div>
+                        <div class="m-box">
+                            <h6><strong>Price:</strong> ${{ watch.bid|intcomma }}</h6>
+                        </div>
+                        <div class="m-box">
+                            <h6>{{ watch.description }}</h6>
+                        </div>
+                        <div class="m-box">
+                            {% if watch.active == True %}
+                                <h6>Status: Active</h6>
+                            {% else %}
+                                <h6>Status: Closed</h6>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}

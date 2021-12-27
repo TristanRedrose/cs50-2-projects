@@ -32,7 +32,7 @@ class Listings(models.Model):
         verbose_name_plural= "Listings"
 
     def __str__(self):
-        return f"{self.title} // creator: {self.creator} // category: {self.ctg} // bid: ${self.bid} // created: {self.time} // active: {self.active}"
+        return f"{self.title}"
 
 class Comment(models.Model):
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="writer", editable=False)
@@ -41,3 +41,10 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"Writer: {self.writer} // Subject: {self.subject.title} // Comment: {self.comment}"
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(User, unique=True, on_delete=models.CASCADE, related_name="watcher")
+    lists = models.ManyToManyField(Listings, related_name="watched")
+
+    def __str__(self):
+        return f"{self.user}'s watchlist"

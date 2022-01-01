@@ -7,37 +7,26 @@ from django.core.exceptions  import ValidationError
 
 from .models import User, Categories, Listings, Comment, Watchlist, Bidding
 
-
-def index(request):
+def get_listings():
     # Get highest bid for every listing
     listings_qset = Listings.objects.all()
     for listing in listings_qset:
-        bids = listing.bids.all()
-        highest_bid = 0
-        for bid in bids:
-            if highest_bid < bid.bid:
-                highest_bid = bid.bid
-        listing.highest_bid = highest_bid
-           
+        highest_bids = listing.bids.all().order_by("-bid")
+        if highest_bids.exists():
+            listing.highest_bid = highest_bids[0].bid
+        else:
+            listing.highest_bid = None
+    return listings_qset
+
+def index(request):          
     return render(request, "auctions/index.html", {
-        "listings": listings_qset
+        "listings": get_listings()
     })
 
-def closed_view(request):
-    # Get highest bid for every listing
-    listings_qset = Listings.objects.all()
-    for listing in listings_qset:
-        bids = listing.bids.all()
-        highest_bid = 0
-        for bid in bids:
-            if highest_bid < bid.bid:
-                highest_bid = bid.bid
-        listing.highest_bid = highest_bid
-           
+def closed_view(request):         
     return render(request, "auctions/closed_view.html", {
-        "listings": listings_qset
+        "listings": get_listings()
     })
-
 
 def login_view(request):
     if request.method == "POST":
@@ -96,6 +85,7 @@ def newlist(request):
         title = request.POST["title"]
 
         # Return error message if user left title field empty
+        title = title.strip()
         if title == "":
             return render(request, "auctions/newlist.html", {
                 "message": "Title is required.",
@@ -104,6 +94,7 @@ def newlist(request):
         description = request.POST["description"]
 
         # Return error message if user left description field empty
+        description = description.strip()
         if description == "":
             return render(request, "auctions/newlist.html", {
                 "message": "Description is required.",
@@ -145,25 +136,17 @@ def list_view(request, listid):
         if x < bidding.bid:
             x = bidding.bid
     try:
-        bid = Bidding.objects.get(bid=x)
+        bid = Bidding.objects.get(bid=x,listing=listing)
+        bid_check = bid.bid + 1
     except Bidding.DoesNotExist:
         bid = None
+        bid_check = None
 
     # Add comment to listing page
     if request.method == "POST":
         writer = User.objects.get(pk=request.POST["name"])
         subject = Listings.objects.get(pk=listid)
         comment = request.POST["comment"]
-
-        # Return error message if comment is empty
-        if comment == "":
-            return render(request, "auctions/listing.html", {
-            "listing": Listings.objects.get(pk=int(listid)),
-            "comments": Comment.objects.all(),
-            "bid": bid,
-            "check": check,
-            "message": "Comment can't be empty"
-            })
         
         # Save the comment and reload the page
         new = Comment(writer=writer, subject=subject, comment=comment)
@@ -172,6 +155,7 @@ def list_view(request, listid):
             "listing": Listings.objects.get(pk=int(listid)),
             "comments": Comment.objects.all(),
             "bid": bid,
+            "bid_check": bid_check,
             "check": check
         })
     else:
@@ -180,6 +164,7 @@ def list_view(request, listid):
         return render(request, "auctions/listing.html", {
             "listing": Listings.objects.get(pk=int(listid)),
             "comments": Comment.objects.all(),
+            "bid_check": bid_check,
             "bid": bid,
             "check": check
         })
@@ -192,20 +177,11 @@ def category_view(request):
     })
 
 def category_listview(request, catid):
-    # Get highest bid for every listing
-    listings_qset = Listings.objects.all()
-    for listing in listings_qset:
-        bids = listing.bids.all()
-        highest_bid = 0
-        for bid in bids:
-            if highest_bid < bid.bid:
-                highest_bid = bid.bid
-        listing.highest_bid = highest_bid
 
     # Show all listings that fit the selected category
     return render(request, "auctions/categoryview.html", {
          "ctg": Categories.objects.get(pk=catid),
-         "listings": listings_qset
+         "listings": get_listings()
     })
 
 def close_list(request, listid):
@@ -226,16 +202,6 @@ def close_list(request, listid):
 
 def watch(request):
 
-    # Get highest bid for every listing
-    listings_qset = Listings.objects.all()
-    for listing in listings_qset:
-        bids = listing.bids.all()
-        highest_bid = 0
-        for bid in bids:
-            if highest_bid < bid.bid:
-                highest_bid = bid.bid
-        listing.highest_bid = highest_bid
-
     if request.method == "POST":
 
         # See if user already has a watchlist to add to, if not create new and add item
@@ -251,7 +217,7 @@ def watch(request):
         # Show items in watchlist
         return render(request, "auctions/watchlist.html", {
             "watchlists": Watchlist.objects.get(user=watcher),
-            "listings": listings_qset,
+            "listings": get_listings(),
             "check": True
         })
     else:
@@ -268,21 +234,12 @@ def watch(request):
         # Show users watchlist
         return render(request, "auctions/watchlist.html", {
             "watchlists": new,
-            "listings": listings_qset,
+            "listings": get_listings(),
             "check": check
         })
     
 def watchdel(request):
 
-    # Get highest bid for every listing
-    listings_qset = Listings.objects.all()
-    for listing in listings_qset:
-        bids = listing.bids.all()
-        highest_bid = 0
-        for bid in bids:
-            if highest_bid < bid.bid:
-                highest_bid = bid.bid
-        listing.highest_bid = highest_bid
 
     if request.method == "POST":
 
@@ -305,13 +262,13 @@ def watchdel(request):
             # Return empty watchlist
             return render(request, "auctions/watchlist.html", {  
                 "watchlists": old,
-                "listings": listings_qset,
+                "listings": get_listings(),
                 "check": False
             })
         # Show remaining items in watchlist
         return render(request, "auctions/watchlist.html", {  
             "watchlists": Watchlist.objects.get(user=name),
-            "listings": listings_qset,
+            "listings": get_listings(),
             "check": True
     })
 
@@ -323,7 +280,7 @@ def addbid(request):
     # Check is the bid greater than previous bids, or if no bids exist, equal or greater to the starting price
     bids = Bidding.objects.filter (listing=item)
     if int(bid) < int(item.bid):
-        return redirect(f"listing/{item.id}")
+        raise ValidationError("Bid must be greater or equal than the starting price")
     for x in bids:
         if int(bid) <= int(x.bid):
             raise ValidationError("Bid must be greater than the previous bid")

@@ -60,7 +60,11 @@
                         <div class="form-group">
                             <input type="hidden" name="name" value="{{ user.id }}">
                             <input type="hidden" name="item" value="{{ listing.id }}">
-                            <input class="form-control" type="number" min="1" name="bid" placeholder="Bid">
+                            {% if bid.bid == None %}
+                                <input class="form-control" type="number" min="{{listing.bid}}" required name="bid" placeholder="Bid">
+                            {% else %}
+                                <input class="form-control" type="number" min="{{bid_check}}" required name="bid" placeholder="Bid">
+                            {% endif %}
                         </div>
                         <input class="btn btn-primary" type="submit" value="Place bid">
                     </form>
@@ -88,9 +92,6 @@
             </ul>
         </div>
         <div class="m-box">
-            {% if message %}
-                <div>{{ message}}</div>
-            {% endif %}
             <h4>Comments:</h4>
         </div>
         <div class="comment-box">
@@ -108,7 +109,7 @@
                     {% csrf_token %}
                     <div class="form-group">
                         <input type="hidden" name="name" value="{{ user.id }}">
-                        <input class="form-control" type="text" min="1" name="comment" placeholder="Write comment">
+                        <input class="form-control" type="text" min="1" name="comment" required placeholder="Write comment">
                     </div>
                     <input class="btn btn-primary" type="submit" value="Comment">
                 </form>

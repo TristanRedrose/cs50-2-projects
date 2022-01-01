@@ -27,7 +27,7 @@
                     <h6> <strong>Category:</strong> {{ listing.ctg }}</h6>
                 </div>
                 <div class="m-box">
-                    {% if listing.highest_bid > listing.bid %}
+                    {% if listing.highest_bid >= listing.bid %}
                         <h6><strong>Closing bid:</strong> ${{ listing.highest_bid|intcomma }}</h6>
                     {% else %}
                         <h6><strong>Listing withdrawn</h6>

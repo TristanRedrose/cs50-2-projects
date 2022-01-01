@@ -3,19 +3,28 @@
 
 {% block body %}
     <h2>Listing: {{ listing.title }}</h2>
-    {% if user.is_authenticated and check == False %}
+    {% if user.is_authenticated and check == False and listing.active == True %}
+        <div class="m-box">
+            <form action="{% url 'watchlist' %}" method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="hidden" name="name" value="{{ user.id }}">
+                    <input type="hidden" name="list-name" value="{{ listing.id }}">
+                </div>
+                <input class="btn btn-primary" type="submit" value="Add to watchlist">
+            </form>
+        </div>
+    {% elif user.is_authenticated and check == True %}
     <div class="m-box">
-        <form action="{% url 'watchlist' %}" method="post">
+        <form action="{% url 'watchdel' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
                 <input type="hidden" name="name" value="{{ user.id }}">
                 <input type="hidden" name="list-name" value="{{ listing.id }}">
             </div>
-            <input class="btn btn-primary" type="submit" value="Add to watchlist">
+            <input class="btn btn-primary" type="submit" value="Remove from watchlist">
         </form>
     </div>
-    {% elif user.is_authenticated and check == True %}
-    <p>Listing in watchlist</p>
     {% endif %}
     <div class="list-box">
         <div class="auction-box">
@@ -31,23 +40,35 @@
             <h6>{{ listing.description }}</h6>
         </div>
         <div class="m-box">
-            <h3>Current price: ${{ listing.bid|intcomma }}</h3>
-        </div>
-        {% if user.is_authenticated %}
-            {% if user.username|upper != listing.creator|upper %}
-            <div class="m-box">
-                <form action="" method="post">
-                    {% csrf_token %}
-                    <div class="form-group">
-                        <input class="form-control" type="number" min="1" name="bid" placeholder="Bid">
-                    </div>
-                    <input class="btn btn-primary" type="submit" value="Place bid">
-                </form>
-            </div>
+            {% if bid.bid >= listing.bid and listing.active == False %}
+                <h3>Closing bid: ${{ bid.bid|intcomma }}</h3>
+            {% elif bid.bid == None and listing.active == False %}
+                <h3>Listing withdrawn</h3>
+            {% elif bid.bid >= listing.bid %}
+                <h3>Current bid: ${{ bid.bid|intcomma }}</h3>
             {% else %}
-            <div class="m-box">
-            <a class="btn btn-primary" href="/listing/{{ listing.id }}/close">Close listing</a>
-            </div>
+                <h3>Starting price: ${{ listing.bid|intcomma }}</h3>
+            {% endif %}
+        </div>
+        {% if user.is_authenticated and listing.active == False and user.username|upper == bid.bidder|upper %}
+            <h3>You have won the bid</h3>
+        {% elif user.is_authenticated and listing.active != False %}
+            {% if user.username|upper != listing.creator|upper %}
+                <div class="m-box">
+                    <form action="{% url 'addbid' %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="hidden" name="name" value="{{ user.id }}">
+                            <input type="hidden" name="item" value="{{ listing.id }}">
+                            <input class="form-control" type="number" min="1" name="bid" placeholder="Bid">
+                        </div>
+                        <input class="btn btn-primary" type="submit" value="Place bid">
+                    </form>
+                </div>
+            {% elif user.username|upper == listing.creator|upper %}
+                <div class="m-box">
+                    <a class="btn btn-primary" href="/listing/{{ listing.id }}/close">Close listing</a>
+                </div>
             {% endif %}
         {% endif %}
         <div class="m-box">
@@ -67,28 +88,31 @@
             </ul>
         </div>
         <div class="m-box">
+            {% if message %}
+                <div>{{ message}}</div>
+            {% endif %}
             <h4>Comments:</h4>
         </div>
         <div class="comment-box">
             {% for comment in comments %}
                 {% if listing.title == comment.subject.title %}
-                <div class="c-box">
-                <p><strong>{{ comment.writer}}:</strong> {{ comment.comment }}</p>
-                </div>
+                    <div class="c-box">
+                        <p><strong>{{ comment.writer}}:</strong> {{ comment.comment }}</p>
+                    </div>
                 {% endif %}
             {% endfor %}
         </div>
         {% if user.is_authenticated %}
-        <div class="m-box">
-            <form action="" method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <input type="hidden" name="name" value="{{ user.id }}">
-                    <input class="form-control" type="text" min="1" name="comment" placeholder="Write comment">
-                </div>
-                <input class="btn btn-primary" type="submit" value="Comment">
-            </form>
-        </div>
+            <div class="m-box">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="hidden" name="name" value="{{ user.id }}">
+                        <input class="form-control" type="text" min="1" name="comment" placeholder="Write comment">
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Comment">
+                </form>
+            </div>
         {% endif %}
     </div>
 {% endblock %}

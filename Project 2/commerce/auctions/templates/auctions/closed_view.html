@@ -2,9 +2,9 @@
 {% load humanize %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Closed Listings</h2>
     {% for listing in listings%}
-        {% if listing.active == True %}
+        {% if listing.active == False %}
         <div class="auction-box">
             <div class="image-box">
                 {% if listing.picture ==  "" %}
@@ -27,10 +27,10 @@
                     <h6> <strong>Category:</strong> {{ listing.ctg }}</h6>
                 </div>
                 <div class="m-box">
-                    {% if listing.highest_bid >= listing.bid %}
-                        <h6><strong>Current bid:</strong> ${{ listing.highest_bid|intcomma }}</h6>
+                    {% if listing.highest_bid > listing.bid %}
+                        <h6><strong>Closing bid:</strong> ${{ listing.highest_bid|intcomma }}</h6>
                     {% else %}
-                        <h6><strong>Starting price:</strong> ${{ listing.bid|intcomma }}</h6>
+                        <h6><strong>Listing withdrawn</h6>
                     {% endif %}
                 </div>
                 <div class="m-box">

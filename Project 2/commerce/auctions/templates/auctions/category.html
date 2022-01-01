@@ -6,5 +6,6 @@
         {% for category in categories%}
         <li><a href="/ctg/{{ category.id }}">{{ category.cat }}</a></li>
         {% endfor %}
+        <li><a href="{% url 'closed_view' %}">Closed listings</a></li>
     </ul>
 {% endblock %}

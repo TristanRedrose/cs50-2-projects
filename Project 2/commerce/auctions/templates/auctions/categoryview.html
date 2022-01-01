@@ -27,7 +27,11 @@
                     <h6> <strong>Category:</strong> {{ listing.ctg }}</h6>
                 </div>
                 <div class="m-box">
-                    <h6><strong>Price:</strong> ${{ listing.bid|intcomma }}</h6>
+                    {% if listing.highest_bid > listing.bid %}
+                        <h6><strong>Current price:</strong> ${{ listing.highest_bid|intcomma }}</h6>
+                    {% else %}
+                        <h6><strong>Starting price:</strong> ${{ listing.bid|intcomma }}</h6>
+                    {% endif %}
                 </div>
                 <div class="m-box">
                     <h6>{{ listing.description }}</h6>

@@ -36,7 +36,7 @@ class Listings(models.Model):
 
 class Comment(models.Model):
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name="writer", editable=False)
-    subject = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="writer", editable=False)
+    subject = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="subject", editable=False)
     comment = models.CharField(max_length=500, editable=False)
 
     def __str__(self):
@@ -48,3 +48,11 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return f"{self.user}'s watchlist"
+
+class Bidding(models.Model):
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE, related_name="buyer")
+    bid = models.IntegerField(validators=[MinValueValidator(0)])
+    listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name= "bids")
+
+    def __str__(self):
+        return f"{self.bidder}'s bid on {self.listing.title}"

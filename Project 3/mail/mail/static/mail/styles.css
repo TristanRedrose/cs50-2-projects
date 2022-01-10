@@ -1,0 +1,67 @@
+textarea {
+    min-height: 400px;
+}
+
+#main-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+}
+
+#button-container{
+    flex: 10%;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+}
+
+#link {
+    flex: 90%;
+    text-decoration: none;
+}
+
+#archive {
+    font-size: 11px;
+    background-color: transparent;
+    color: #007bff;
+    border-radius: 4px;
+    border: 1px #007bff solid;
+}
+
+#archive:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+#archive:active {
+    box-shadow: 0px 0px 3px 3px #007bff;
+}
+
+#archive:focus{
+    outline:none;
+}
+
+#container {
+    border: 1px black solid;
+    display: flex;
+    justify-content: space-between;
+}
+
+#sender {
+    font-weight: 700;
+    padding-left: 10px;
+    color: black;
+    width: 25%;
+}
+
+#subject {
+    width: 45%;
+    color: black;
+}
+
+#time {
+    color: gray;
+    padding-right: 10px;
+    width: 30%;
+}

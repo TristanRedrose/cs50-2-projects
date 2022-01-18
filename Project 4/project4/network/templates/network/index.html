@@ -1,0 +1,30 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    {{ request.user.username|json_script:"user_name" }}
+
+    <h3 id="page-title">All Posts</h3>
+    
+    {% if user.is_authenticated %}
+        <div class="content-box">
+            <h5>New post</h5>
+            <form id="post-form">
+                <div>
+                    <textarea id="post-area" name="new-post"></textarea>
+                </div>
+                <div>
+                    <input id="post-button" type="submit">
+                </div>
+            </form>     
+        </div>
+    {% endif %}
+    
+    <div id="posts-box">
+    </div>
+    
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+    <h3 id="page-title">{{ username }}'s Profile</h3>
+
+    {% for post in posts %}
+        <div id = "post-div">
+            <h6>{{ post.writer.username }}<h6>
+            <p>{{ post.body }}</p>
+            <p id="time-text">{{ post.timestamp }}</p>
+            <p id="time-text">Likes: {{ post.likes}}</P>
+        </div>
+    {% endfor %}
+
+{% endblock %}

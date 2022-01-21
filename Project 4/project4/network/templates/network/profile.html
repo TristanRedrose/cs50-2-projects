@@ -3,15 +3,34 @@
 
 {% block body %}
 
-    <h3 id="page-title">{{ username }}'s Profile</h3>
+    <h3 id="page-title">{{ name }}'s Profile</h3>
 
     {% for post in posts %}
         <div id = "post-div">
-            <h6>{{ post.writer.username }}<h6>
-            <p>{{ post.body }}</p>
-            <p id="time-text">{{ post.timestamp }}</p>
-            <p id="time-text">Likes: {{ post.likes}}</P>
+            <p id="writer-name"><bold>{{ post.writer }}</bold></p>
+            <div id="bodytext-div">
+                <div id="texty-box">
+                    <p id="postnum"> {{ post.id }}</p>
+                    <p id ="text">{{ post.body }}</p>
+                    {% if user == post.writer %}
+                        <a id = "edit-link" href="#" onclick="event.preventDefault(); get_edit_field({{ post.id }})">Edit</a>
+                    {% endif %}
+                </div>
+            </div>
+                <p id="time-text">{{ post.timestamp }}</p>
+            <div id="like-div">
+                <p id="time-text">Likes: {{ post.likes }}</p>
+                {% if user != post.writer %}
+                    <a id="like-link" href="posts/{{ post.id }}">
+                        <img id="like-img" src="https://www.vectorico.com/wp-content/uploads/2018/02/Like-Icon.png" alt="thumbsup">
+                    </a>
+                {% endif %}
+            </div>
         </div>
     {% endfor %}
 
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/index.js' %}"></script>
 {% endblock %}

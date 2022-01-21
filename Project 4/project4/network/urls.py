@@ -13,7 +13,7 @@ urlpatterns = [
 
     # API routes
     path("posts", views.compose, name="compose"),
-    path("posts/<str:writer>", views.get_posts, name="get_posts"),
+    path("posts/newpost", views.add_posts, name="add_posts"),
     path("posts/edit/<int:post_id>", views.edit_post, name="edit_post"),
 ]
 

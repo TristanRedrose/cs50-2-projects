@@ -1,27 +1,11 @@
-document.addEventListener('DOMContentLoaded', function() {
-
-    load_posts('all');
-
-    // Use submit button to make post
-    const postForm = document.querySelector('#post-form')
-
-    // If form exists add event listener
-    if (postForm !== null) {
-        postForm.addEventListener('submit', function(event) {
-            event.preventDefault();
-            make_post();
-        });
-    }
-})
-
 function make_post() {
-  
+    
     // Make post
     fetch('/posts', {
-      method: 'POST',
-      body: JSON.stringify({
-          body: document.querySelector('#post-area').value
-      })
+        method: 'POST',
+        body: JSON.stringify({
+            body: document.querySelector('#post-area').value
+        })
     })
     .then(response => response.json())
     .then(result => {
@@ -30,210 +14,95 @@ function make_post() {
         
         // Clear previous post list if it exists, and re-list posts
         if (result.message === 'Post submitted.') {
-            clear('#posts-box');
-            load_posts('all');
+            
+            add_post();
 
             // Clear new post textbox
             document.querySelector('#post-area').value = '';
         }
-    });
+    })
 }
 
-function load_posts(writer) {
+function add_post(){
     
-    // Get name of current user
-    const user_name = JSON.parse(document.getElementById('user_name').textContent);
-
-    fetch(`/posts/${writer}`)
+    // Create new post elements
+    fetch('/posts/newpost')
     .then(response => response.json())
-    .then(posts => {
-        //print posts
-        console.log(posts);
+    .then(post => {
 
-        const allposts = posts
+        const newpost = post
+
+        const containerDiv = document.createElement('div');
+        containerDiv.setAttribute('id', 'post-div');
         
-        // Create html elements for each post
-        allposts.forEach(post => {
-            
-            // Create main container
-            const mainDiv = document.createElement('div');
-            mainDiv.setAttribute('id', 'post-div');
-            
-            // Make link to writers profile page
-            const writerName = document.createElement('a');
-            writerName.setAttribute('href', `profile/${post.writer}`);
-            writerName.setAttribute('id', 'link');
-            writerName.innerText =`${post.writer}`;
-            mainDiv.appendChild(writerName);
-            
-            // Create body div
-            const bodyDiv = document.createElement('div');
-            bodyDiv.setAttribute('id', 'bodytext-div');
-            
-            // Create body-text and edit link div
-            const textDiv = document.createElement('div');
-            textDiv.setAttribute('id', 'texty-div');
+        containerDiv.innerHTML = `
+        <a id="link" href="profile/${newpost.writer}">${newpost.writer}</a>
+        <div id="bodytext-div">
+            <div id="texty-box">
+                <p id="postnum">${newpost.id}</p>
+                <p id ="text">${newpost.body}</p>
+                <a id = "edit-link" href="#" onclick="event.preventDefault(); get_edit_field(${newpost.id})">Edit</a>
+            </div>
+        </div>
+            <p id="time-text">${newpost.timestamp}</p>
+        <div id="like-div">
+            <p id="time-text">Likes: ${newpost.likes}</p>
+        </div>
+        `;
 
-            // Add an edit option if the current user is also the post writer
-            if (user_name === post.writer) {
+        // Append new post on top of page
+        const box = document.querySelector('#post-box');
+        box.insertBefore(containerDiv, box.firstChild);
 
-                const editLink = document.createElement('a');
-                editLink.setAttribute('href', '#');
-                editLink.setAttribute('id', 'edit-link');
-                editLink.innerText = 'Edit';
-                textDiv.appendChild(editLink);
-                
-                // Add edit link functionality
-                editLink.addEventListener('click', function(event) {
-                    event.preventDefault();
-        
-                    // Remove any open edit boxes when a new one is opened
-                    if (document.querySelector('#edit-div') != null) {
-                        const editDivs = document.querySelectorAll('#edit-div')
-                    
-                        editDivs.forEach(function(editDiv) {
-                            editDiv.remove();
-                        })
-                    }
-                    
-                    // Show textbox when edit box is removed
-                    const textDivs = document.querySelectorAll('#texty-div')
-                    
-                    textDivs.forEach(function(textDiv) {
-                        if (textDiv.style.display == 'none') {
-                            textDiv.style.display = 'block';
-                        }
-                    })
-                    
-                    // Hide current text
-                    textDiv.style.display= 'none';
-                    
-                    // Display edit field
-                    get_edit_field(`${post.body}`, textDiv, bodyDiv, `${post.id}`);
-                })
-            }
-
-            // Add post bodytext
-            const bodyText = document.createElement('p');
-            bodyText.innerText =`${post.body}`;
-            textDiv.appendChild(bodyText);
-            
-            // Add text and edit link to main body div
-            bodyDiv.appendChild(textDiv);
-            
-            // Add body div to main post div
-            mainDiv.appendChild(bodyDiv);
-            
-            // Add timestamp
-            const time = document.createElement('p');
-            time.setAttribute('id', 'time-text');
-            time.innerText =`${post.timestamp}`;
-            mainDiv.appendChild(time);
-            
-            // Make div for likes and like button
-            const likeDiv = document.createElement('div');
-            likeDiv.setAttribute('id', 'like-div');
-
-            // Add like count
-            const likes = document.createElement('p');
-            likes.setAttribute('id', 'time-text');
-            likes.innerText =`Likes: ${post.likes}`;
-            likeDiv.appendChild(likes);
-            
-            // Add like button if user is not also the writer
-            if (user_name !== post.writer) {
-
-                // Create link and button-image
-                const likeImage = document.createElement('img');
-                likeImage.setAttribute('src','https://www.vectorico.com/wp-content/uploads/2018/02/Like-Icon.png');
-                likeImage.setAttribute('id', 'like-img');
-            
-                // Wrap link around the button image
-                const likeLink = document.createElement('a');
-                likeLink.setAttribute('href', `posts/${post.id}`);
-                likeLink.setAttribute('id', 'like-link');
-                likeLink.appendChild(likeImage);
-                
-                // If user not authorised, prompt for a login
-                if (user_name === '') {
-                    likeLink.setAttribute('href', '/login');
-                }
-            
-                likeDiv.appendChild(likeLink);
-            }
-            
-            // Add like count div to main post container
-            mainDiv.appendChild(likeDiv);
-
-            //Append post to page
-            document.querySelector("#posts-box").append(mainDiv);  
-        });
+        // Hide last post on page-listing
+        boxes = box.querySelectorAll('#post-div');
+        boxes[10].style.display = 'none';
     })
 }
 
-function clear(element) {
+function get_edit_field (post_id) {
     
-    // Clear div 
-    var div = document.querySelector(element);
-    while(div.firstChild) {
-        div.removeChild(div.firstChild);
-    }
-}
-
-function get_edit_field (bodyText, text_container, main_container, post_id) {
-
-    // Create container for edit elements
-    const editDiv= document.createElement('div');
-    editDiv.setAttribute('id', 'edit-div');
-
-    // Create form elements 
-    const form = document.createElement('form');
-    form.setAttribute('class', 'edit-form');
-
-    const textArea = document.createElement('textarea');
-    textArea.innerText = bodyText;
-    textArea.setAttribute('id', 'edit-area');
-    form.appendChild(textArea);
-
-    const submitButton = document.createElement('input');
-    submitButton.setAttribute('type', 'submit');
-    submitButton.setAttribute('id', 'edit-submit');
-    form.appendChild(submitButton);
-
-    // Add edit form functionality
-    form.addEventListener('submit', function(event) {
-        event.preventDefault();
-        edit_post(post_id);
-    })
-
-    const cancelButton = document.createElement('button');
-    cancelButton.setAttribute('id', 'edit-submit');
-    cancelButton.style.marginLeft = '10px';
-    cancelButton.innerText = 'Cancel';
-    form.appendChild(cancelButton);
-
-   
-    // Add cancel button functionality
-    cancelButton.addEventListener('click', function(event) {
-        event.preventDefault();
-        editDiv.remove();
-        text_container.style.display = 'block';
-    })
+    // If any open edits exist close them and restore textbox
+    clear_edits(); 
     
-    // Append form elements to edit container
-    editDiv.appendChild(form);
+    // Show textbox when edit box is removed
+    const containerDivs = document.querySelectorAll('#bodytext-div')
+    
+    containerDivs.forEach(function(containerDiv) {
+        if (containerDiv.querySelector('p').innerHTML == post_id) {
+            const container = containerDiv;
 
-    // Append edit container to main container
-    main_container.appendChild(editDiv);
+            const text = container.querySelector('#text').innerText;
+
+            // Hide current post bodytext
+            container.querySelector('#texty-box').style.display = 'none';
+            
+            // Create container for edit elements
+            const editDiv = document.createElement('div');
+            editDiv.setAttribute('id', 'edit-div');
+            
+            editDiv.innerHTML = `
+            <form class="edit-form">
+                <textarea id="edit-area">${ text }</textarea>
+                <input type="submit" id="edit-submit" onclick="event.preventDefault(); edit_post(${post_id})">
+                <button id="edit-submit" style="margin-left: 10px" onclick="event.preventDefault(); clear_edits()">Cancel</button>
+            </form> 
+            `;
+
+            // Append edit container to main container
+            container.appendChild(editDiv);
+        }
+    })
 }
 
 function edit_post(post_id) {
-  
+
+    const text = document.querySelector('#edit-area').value;
     // Make post
     fetch(`/posts/edit/${post_id}`, {
       method: 'POST',
       body: JSON.stringify({
-          body: document.querySelector('#edit-area').value
+          body: text
       })
     })
     .then(response => response.json())
@@ -241,11 +110,38 @@ function edit_post(post_id) {
         // Print result
         console.log(result);
         
-        // Clear previous post list if it exists, and re-list posts
+        // If edit succesfull, remove edit div and show changed post
         if (result.message === 'Post edited.') {
-            clear('#posts-box');
-            load_posts('all');
+            const textDivs = document.querySelectorAll('#texty-box');
+                    
+            textDivs.forEach(function(textDiv) {
+                if (textDiv.style.display == 'none') {
+                    document.querySelector('#edit-div').remove();
+                    textDiv.querySelector('#text').innerText = text;
+                    textDiv.style.display = 'block';
+                }
+            })
         }
-    });
+    })
 }
 
+function clear_edits() {
+     
+    // Remove any open edit boxes when a new one is opened
+    if (document.querySelector('#edit-div') != null) {
+        const editDivs = document.querySelectorAll('#edit-div');
+
+        editDivs.forEach(function(editDiv) {
+            editDiv.remove();
+        })
+    }
+
+    // Show textbox when edit box is removed
+    const textyDivs = document.querySelectorAll('#texty-box')
+    
+    textyDivs.forEach(function(textDiv) {
+        if (textDiv.style.display == 'none') {
+            textDiv.style.display = 'block';
+        }
+    })
+}

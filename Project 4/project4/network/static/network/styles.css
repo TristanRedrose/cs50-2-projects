@@ -76,6 +76,18 @@
     margin-left: 15px;
 }
 
+#postnum {
+    display: none;
+}
+
+#writer-name {
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.pagination {
+    justify-content: center;
+}
 
 
 

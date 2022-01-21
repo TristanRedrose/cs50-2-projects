@@ -7,12 +7,23 @@ from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 
 from .models import User, Posts
 
 
 def index(request):
-    return render(request, "network/index.html")
+    posts = Posts.objects.all()
+    posts = posts.order_by("-timestamp").all()
+
+    paginator = Paginator(posts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "network/index.html", {
+        "page_obj": page_obj,
+        "user": request.user
+    })
 
 
 def login_view(request):
@@ -86,15 +97,12 @@ def compose(request):
 
     return JsonResponse({"message": "Post submitted."}, status=201)
 
-def get_posts(request, writer):
+def add_posts(request):
 
-    if writer == "all":
-        posts = Posts.objects.all()
-    else:
-        return JsonResponse({"error": "No such writer."}, status=400)
-    
+    posts = Posts.objects.all()
     posts = posts.order_by("-timestamp").all()
-    return JsonResponse([post.serialize() for post in posts], safe=False)
+    post = posts.first()
+    return JsonResponse(post.serialize(), safe=False)
 
 def get_profile(request, username):
     
@@ -104,7 +112,7 @@ def get_profile(request, username):
 
     return render(request, "network/profile.html", {
                 "posts": posts,
-                "username": user.username
+                "name": request.user
             })
 
 @csrf_exempt

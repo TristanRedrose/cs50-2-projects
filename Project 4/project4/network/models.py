@@ -23,3 +23,8 @@ class Posts(models.Model):
     class Meta:
         verbose_name= "Post"
         verbose_name_plural= "Posts"
+
+class Following(models.Model):
+    follower = models.ForeignKey("User", on_delete=models.CASCADE, unique=True, related_name="follower")
+    following = models.ManyToManyField("User", related_name="followers")
+    followers = models.PositiveIntegerField(default=0)

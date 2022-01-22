@@ -3,31 +3,59 @@
 
 {% block body %}
 
-    <h3 id="page-title">{{ name }}'s Profile</h3>
+    <h3 id="page-title">{{ profile }}'s Profile</h3>
 
-    {% for post in posts %}
-        <div id = "post-div">
-            <p id="writer-name"><bold>{{ post.writer }}</bold></p>
-            <div id="bodytext-div">
-                <div id="texty-box">
-                    <p id="postnum"> {{ post.id }}</p>
-                    <p id ="text">{{ post.body }}</p>
-                    {% if user == post.writer %}
-                        <a id = "edit-link" href="#" onclick="event.preventDefault(); get_edit_field({{ post.id }})">Edit</a>
+    <div id="follwer-div">
+        <h5>Followers:</h5>
+        <h5 id="count">{{ count }}</h5>
+        {% if user.is_authenticated and user != name %}
+                <button id="follow-button" onclick="event.preventDefault();follow_unfollow('{{ name }}')">{{ text }}</button>
+        {% endif %}
+    </div>
+
+    <div id="post-box">
+        {% for post in page_obj %}
+            <div id = "post-div">
+                <h6 id="link" >{{ post.writer }}</h6>
+                <div id="bodytext-div">
+                    <div id="texty-box">
+                        <p id="postnum"> {{ post.id }}</p>
+                        <p id ="text">{{ post.body }}</p>
+                        {% if user == post.writer %}
+                            <a id = "edit-link" href="#" onclick="event.preventDefault(); get_edit_field({{ post.id }})">Edit</a>
+                        {% endif %}
+                    </div>
+                </div>
+                    <p id="time-text">{{ post.timestamp }}</p>
+                <div id="like-div">
+                    <p id="time-text">Likes: {{ post.likes }}</p>
+                    {% if user != post.writer %}
+                        <a id="like-link" href="posts/{{ post.id }}">
+                            <img id="like-img" src="https://www.vectorico.com/wp-content/uploads/2018/02/Like-Icon.png" alt="thumbsup">
+                        </a>
                     {% endif %}
                 </div>
             </div>
-                <p id="time-text">{{ post.timestamp }}</p>
-            <div id="like-div">
-                <p id="time-text">Likes: {{ post.likes }}</p>
-                {% if user != post.writer %}
-                    <a id="like-link" href="posts/{{ post.id }}">
-                        <img id="like-img" src="https://www.vectorico.com/wp-content/uploads/2018/02/Like-Icon.png" alt="thumbsup">
-                    </a>
+        {% endfor %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
                 {% endif %}
-            </div>
+        
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+        
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
         </div>
-    {% endfor %}
+    </div>
 
 {% endblock %}
 

@@ -15,7 +15,7 @@
     resize: none;
 }
 
-#post-button, #edit-submit {
+#post-button, #edit-submit, #follow-button{
     font-size: 14px;
     background-color: transparent;
     color: #007bff;
@@ -28,11 +28,11 @@
     color: white;
 }
 
-#post-button:active, #edit-submit:active {
+#post-button:active, #edit-submit:active, #follow-button:hover {
     box-shadow: 0px 0px 3px 3px #007bff;
 }
 
-#post-button:focus, #edit-submit:focus{
+#post-button:focus, #edit-submit:focus, #follow-button:focus{
     outline:none;
 }
 
@@ -89,8 +89,19 @@
     justify-content: center;
 }
 
+#follwer-div {
+    margin: 10px 10px;
+    display: flex;
+    flex-direction: row;
+}
 
+#count {
+    margin-left: 10px;
+}
 
-
-
-
+#follow-button {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    align-self: center;   
+}

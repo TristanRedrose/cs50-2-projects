@@ -145,3 +145,29 @@ function clear_edits() {
         }
     })
 }
+
+function follow_unfollow(profile_name) {
+
+    fetch(`/posts/follows/${profile_name}`)
+    .then(response => response.json())
+    .then(result => {
+        // Print result
+        console.log(result)
+
+        const value = document.querySelector('#count').innerText
+        let count = parseInt(value, 10)
+
+        // Update follower count
+        if (result.message === `Following ${profile_name}.`) {
+            count = count + 1;
+            document.querySelector('#count').innerText = count;
+            document.querySelector('#follow-button').innerText = 'Unfollow';
+        }
+
+        if (result.message === `Unfollowed ${profile_name}.`) {
+            count = count - 1;
+            document.querySelector('#count').innerText = count;
+            document.querySelector('#follow-button').innerText = 'Follow';
+        }
+    })
+}

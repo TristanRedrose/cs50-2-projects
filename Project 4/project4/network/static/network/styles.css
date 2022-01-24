@@ -48,7 +48,7 @@
     font-weight: 700;
 }
 
-#time-text {
+#time-text{
     color: gray;
     font-size: 12px;
 }
@@ -104,4 +104,10 @@
     margin-bottom: 10px;
     font-size: 14px;
     align-self: center;   
+}
+
+#like-num {
+    color: black;
+    font-size: 12px;
+    margin: 0px 5px;
 }

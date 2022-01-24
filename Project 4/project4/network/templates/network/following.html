@@ -3,34 +3,25 @@
 
 {% block body %}
 
-    <h3 id="page-title">{{ profile }}'s Profile</h3>
-
-    <div id="follwer-div">
-        <h5>Followers:</h5>
-        <h5 id="count">{{ count }}</h5>
-        {% if user.is_authenticated and user != profile %}
-                <button id="follow-button" onclick="event.preventDefault();follow_unfollow('{{ profile }}')">{{ text }}</button>
-        {% endif %}
-    </div>
+    <h3 id="page-title">{{ user }}'s followed posts</h3>
 
     <div id="post-box">
         {% for post in page_obj %}
-        <div id = "post-div">
-            <p id="postnum"> {{ post.id }}</p>
-            <p id="link">{{ post.writer }}</a>
-            <div id="bodytext-div">
-                <div id="texty-box">
-                    <p id ="text">{{ post.body }}</p>
-                    {% if user == post.writer %}
-                        <a id = "edit-link" href="#" onclick="event.preventDefault(); get_edit_field({{ post.id }})">Edit</a>
-                    {% endif %}
+            <div id = "post-div">
+                <p id="postnum"> {{ post.id }}</p>
+                <a id="link" href="profile/{{ post.writer }}">{{ post.writer }}</a>
+                <div id="bodytext-div">
+                    <div id="texty-box">
+                        <p id ="text">{{ post.body }}</p>
+                        {% if user == post.writer %}
+                            <a id = "edit-link" href="#" onclick="event.preventDefault(); get_edit_field({{ post.id }})">Edit</a>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
-                <p id="time-text">{{ post.timestamp }}</p>
-            <div id="like-div">
-                <p id="time-text">Likes:</p>
-                <h6 id="like-num">{{ post.likes }}</h6>
-                {% if user.is_authenticated and user != post.writer  %}
+                    <p id="time-text">{{ post.timestamp }}</p>
+                <div id="like-div">
+                    <p id="time-text">Likes:</p>
+                    <h6 id="like-num">{{ post.likes }}</h6>
                     <a id="like-link" href="#" onclick="event.preventDefault(); like_unlike({{ post.id }})">
                         {% if post.id not in liked_id %}
                             <img id="like-img" src="https://www.vectorico.com/wp-content/uploads/2018/02/Like-Icon.png" alt="thumbsup">
@@ -38,13 +29,8 @@
                             <img id="like-img" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Not_facebook_not_like_thumbs_down.png/1196px-Not_facebook_not_like_thumbs_down.png" alt="thumbsdown">
                         {% endif %}
                     </a>
-                {% elif not user.is_authenticated %}
-                    <a id="like-link" href="{% url 'login' %}">
-                        <img id="like-img" src="https://www.vectorico.com/wp-content/uploads/2018/02/Like-Icon.png" alt="thumbsup">
-                    </a>
-                {% endif %}
+                </div>
             </div>
-        </div>
         {% endfor %}
 
         <div class="pagination">

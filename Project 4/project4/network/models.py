@@ -28,3 +28,8 @@ class Following(models.Model):
     follower = models.ForeignKey("User", on_delete=models.CASCADE, unique=True, related_name="follower")
     following = models.ManyToManyField("User", related_name="followers")
     followers = models.PositiveIntegerField(default=0)
+
+class Liked(models.Model):
+    user = models.ForeignKey("User", on_delete=models.CASCADE, unique=True, related_name="viewer")
+    liked = models.ManyToManyField("Posts", related_name="liked")
+

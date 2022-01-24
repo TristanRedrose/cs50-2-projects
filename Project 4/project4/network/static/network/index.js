@@ -36,10 +36,10 @@ function add_post(){
         containerDiv.setAttribute('id', 'post-div');
         
         containerDiv.innerHTML = `
+        <p id="postnum">${newpost.id}</p>
         <a id="link" href="profile/${newpost.writer}">${newpost.writer}</a>
         <div id="bodytext-div">
             <div id="texty-box">
-                <p id="postnum">${newpost.id}</p>
                 <p id ="text">${newpost.body}</p>
                 <a id = "edit-link" href="#" onclick="event.preventDefault(); get_edit_field(${newpost.id})">Edit</a>
             </div>
@@ -63,14 +63,13 @@ function add_post(){
 function get_edit_field (post_id) {
     
     // If any open edits exist close them and restore textbox
-    clear_edits(); 
+    clear_edits();
     
-    // Show textbox when edit box is removed
-    const containerDivs = document.querySelectorAll('#bodytext-div')
-    
-    containerDivs.forEach(function(containerDiv) {
-        if (containerDiv.querySelector('p').innerHTML == post_id) {
-            const container = containerDiv;
+    // Find current selected post
+    const allPosts = document.querySelectorAll('#post-div')
+    allPosts.forEach(function(post) {
+        if (post.querySelector("#postnum").innerHTML == post_id) {
+            const container = post.querySelector('#bodytext-div');
 
             const text = container.querySelector('#text').innerText;
 
@@ -169,5 +168,40 @@ function follow_unfollow(profile_name) {
             document.querySelector('#count').innerText = count;
             document.querySelector('#follow-button').innerText = 'Follow';
         }
+    })
+}
+
+function like_unlike(post_id) {
+
+    fetch(`/posts/likes/${post_id}`)
+    .then(response => response.json())
+    .then(result => {
+        console.log(result)
+
+        const allPosts = document.querySelectorAll('#post-div')
+
+        allPosts.forEach(function(post) {
+            if (post.querySelector("#postnum").innerHTML == post_id) {
+                const image = post.querySelector('#like-img');
+                
+                const value = post.querySelector('#like-num').innerHTML
+                let count = parseInt(value)
+
+                // Update count and thumbs-img
+                if (result.message === "Post liked.") {
+                    count = count + 1
+                    post.querySelector('#like-num').innerHTML = count
+                    image.setAttribute('src','https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Not_facebook_not_like_thumbs_down.png/1196px-Not_facebook_not_like_thumbs_down.png');
+                    image.setAttribute('alt', 'thumbsdown');
+                }
+
+                if (result.message === "Post unliked.") {
+                    count = count - 1
+                    post.querySelector('#like-num').innerHTML = count
+                    image.setAttribute('src','https://www.vectorico.com/wp-content/uploads/2018/02/Like-Icon.png');
+                    image.setAttribute('alt', 'thumbsup');
+                }
+            }
+        })
     })
 }

@@ -43,7 +43,7 @@ a:hover{
     border-radius: 24px;
     border: 1px lightgrey solid;
     margin-bottom: 20px;
-    background-image: url("../pictures/icon3.png");
+    background-image: url("https://cdn4.iconfinder.com/data/icons/commenly-needed/400/Icon-12-512.png");
     background-size: contain;
     background-repeat: no-repeat;
     font-size: 16px;
@@ -282,4 +282,14 @@ img {
     border: 1px solid #3079ed;
     color: #fff;
 }
+
+
+.img-text {
+    color: #4285f4;
+    font: 16px/16px arial, sans-serif;
+    position: relative;
+    bottom: 30px;
+    right: 55px;
+}
+
 

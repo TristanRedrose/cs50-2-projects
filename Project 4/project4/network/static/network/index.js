@@ -15,48 +15,8 @@ function make_post() {
         // Clear previous post list if it exists, and re-list posts
         if (result.message === 'Post submitted.') {
             
-            add_post();
-
-            // Clear new post textbox
-            document.querySelector('#post-area').value = '';
+            location.reload();
         }
-    })
-}
-
-function add_post(){
-    
-    // Create new post elements
-    fetch('/posts/newpost')
-    .then(response => response.json())
-    .then(post => {
-
-        const newpost = post
-
-        const containerDiv = document.createElement('div');
-        containerDiv.setAttribute('id', 'post-div');
-        
-        containerDiv.innerHTML = `
-        <p id="postnum">${newpost.id}</p>
-        <a id="link" href="profile/${newpost.writer}">${newpost.writer}</a>
-        <div id="bodytext-div">
-            <div id="texty-box">
-                <p id ="text">${newpost.body}</p>
-                <a id = "edit-link" href="#" onclick="event.preventDefault(); get_edit_field(${newpost.id})">Edit</a>
-            </div>
-        </div>
-            <p id="time-text">${newpost.timestamp}</p>
-        <div id="like-div">
-            <p id="time-text">Likes: ${newpost.likes}</p>
-        </div>
-        `;
-
-        // Append new post on top of page
-        const box = document.querySelector('#post-box');
-        box.insertBefore(containerDiv, box.firstChild);
-
-        // Hide last post on page-listing
-        boxes = box.querySelectorAll('#post-div');
-        boxes[10].style.display = 'none';
     })
 }
 

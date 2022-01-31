@@ -231,14 +231,6 @@ def compose(request):
 
     return JsonResponse({"message": "Post submitted."}, status=201)
 
-def get_post(request):
-    
-    # Get all posts and take the newest
-    posts = Posts.objects.all()
-    posts = posts.order_by("-timestamp").all()
-    post = posts.first()
-    return JsonResponse(post.serialize(), safe=False)
-
 @csrf_exempt
 @login_required
 def edit_post(request, post_id):

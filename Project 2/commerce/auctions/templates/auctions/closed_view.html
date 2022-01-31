@@ -4,17 +4,16 @@
 {% block body %}
     <h2>Closed Listings</h2>
     {% for listing in listings%}
-        {% if listing.active == False %}
         <div class="auction-box">
             <div class="image-box">
                 {% if listing.picture ==  "" %}
-                <a href="/listing/{{ listing.id }}">
-                    <image class="l-img" src="https://tacm.com/wp-content/uploads/2018/01/no-image-available.jpeg" alt="no image">
-                </a>
+                    <a href="/listing/{{ listing.id }}">
+                        <image class="l-img" src="https://tacm.com/wp-content/uploads/2018/01/no-image-available.jpeg" alt="no image">
+                    </a>
                 {% else %}
-                <a href="/listing/{{ listing.id }}">
-                    <image class="l-img" src="{{ listing.picture }}" alt="listing image">
-                </a>
+                    <a href="/listing/{{ listing.id }}">
+                        <image class="l-img" src="{{ listing.picture }}" alt="listing image">
+                    </a>
                 {% endif %}
             </div>
             <div class="text-box">
@@ -30,7 +29,7 @@
                     {% if listing.highest_bid >= listing.bid %}
                         <h6><strong>Closing bid:</strong> ${{ listing.highest_bid|intcomma }}</h6>
                     {% else %}
-                        <h6><strong>Listing withdrawn</h6>
+                        <h6><strong>Listing withdrawn</strong></h6>
                     {% endif %}
                 </div>
                 <div class="m-box">
@@ -42,6 +41,5 @@
                 </div>
             </div>
         </div>
-        {% endif %}
     {% endfor %}
 {% endblock %}

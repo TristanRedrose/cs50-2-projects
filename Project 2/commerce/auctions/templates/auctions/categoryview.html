@@ -3,8 +3,7 @@
 
 {% block body %}
     <h2>Category: {{ ctg }}</h2>
-    {% for listing in listings%}
-        {% if listing.ctg == ctg and listing.active == True %}
+    {% for listing in listings %}
         <div class="auction-box">
             <div class="image-box">
                 {% if listing.picture ==  "" %}
@@ -42,6 +41,5 @@
                 </div>
             </div>
         </div>
-        {% endif %}
     {% endfor %}
 {% endblock %}

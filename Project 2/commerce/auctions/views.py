@@ -1,3 +1,4 @@
+from unicodedata import category
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,6 +9,7 @@ from django.core.exceptions  import ValidationError
 from .models import User, Categories, Listings, Comment, Watchlist, Bidding
 
 def get_listings():
+
     # Get highest bid for every listing
     listings_qset = Listings.objects.all()
     for listing in listings_qset:
@@ -18,17 +20,34 @@ def get_listings():
             listing.highest_bid = None
     return listings_qset
 
-def index(request):          
+def index(request):
+
+    activelists = []
+
+    listings = get_listings()
+    for listing in listings:
+        if listing.active == True:
+            activelists.append(listing)
+
     return render(request, "auctions/index.html", {
-        "listings": get_listings()
+        "listings": activelists
     })
 
-def closed_view(request):         
+def closed_view(request):
+
+    closedlists = []
+
+    listings = get_listings()
+    for listing in listings:
+        if listing.active == False:
+            closedlists.append(listing)
+
     return render(request, "auctions/closed_view.html", {
-        "listings": get_listings()
+        "listings": closedlists
     })
 
 def login_view(request):
+
     if request.method == "POST":
 
         # Attempt to sign user in
@@ -49,11 +68,13 @@ def login_view(request):
 
 
 def logout_view(request):
+
     logout(request)
     return HttpResponseRedirect(reverse("index"))
 
 
 def register(request):
+
     if request.method == "POST":
         username = request.POST["username"]
         email = request.POST["email"]
@@ -80,6 +101,7 @@ def register(request):
         return render(request, "auctions/register.html")
 
 def newlist(request):
+
     if request.method == "POST":
         owner = User.objects.get(pk=int(request.POST["owner"]))
         title = request.POST["title"]
@@ -116,6 +138,7 @@ def newlist(request):
         })
     
 def list_view(request, listid):
+
     check = False
     listing = Listings.objects.get(pk=int(listid))
 
@@ -179,9 +202,18 @@ def category_view(request):
 def category_listview(request, catid):
 
     # Show all listings that fit the selected category
+    cat = Categories.objects.get(pk=catid)
+    category = cat.cat
+    
+    categorylists = []
+
+    listings = get_listings()
+    for listing in listings:
+        if listing.ctg == cat and listing.active == True:
+            categorylists.append(listing)
+    
     return render(request, "auctions/categoryview.html", {
-         "ctg": Categories.objects.get(pk=catid),
-         "listings": get_listings()
+         "listings": categorylists
     })
 
 def close_list(request, listid):
@@ -239,7 +271,6 @@ def watch(request):
         })
     
 def watchdel(request):
-
 
     if request.method == "POST":
 
